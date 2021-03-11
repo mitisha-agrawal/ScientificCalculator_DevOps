@@ -2,7 +2,7 @@
 - name: Pull and Run docker image
   hosts: all
   tasks:
-    - name: Pull mitisha-agrawal/calcdockerimage
+    - name: Pull mitisha/calcdockerimage
       docker_image:
         name: mitisha/calcdockerimage
         source: pull
