@@ -1,8 +1,13 @@
 ---
-- name: Pull and RUN docker image of mini project
+- name: Pull and Run docker image
   hosts: all
   tasks:
-    - name: Pull mitisha-agrawal/project
+    - name: Pull mitisha/calcdockerimage
       docker_image:
         name: mitisha/calcdockerimage
-          source: pull
+        source: pull
+    - name: Create default containers
+      docker_container:
+        name: c1
+        image: mitisha/calcdockerimage
+        state: present
