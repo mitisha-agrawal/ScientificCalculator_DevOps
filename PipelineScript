@@ -1,0 +1,43 @@
+pipeline {
+    environment{
+        imageName = ""
+    }
+    agent any
+
+    stages {
+        stage('Git Pull') {
+            steps {
+                git 'https://github.com/mitisha-agrawal/ScientificCalculator_DevOps.git'
+            }
+        }
+        stage('Maven Build') {
+            steps {
+                script{
+                    sh 'mvn clean install'
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                script{
+                    imageName = docker.build "mitisha/calcdockerimage:latest"
+                }
+            }
+        }
+        stage('Docker Push Image') {
+            steps {
+                script{
+                    docker.withRegistry('', 'docker-hub-credentials'){
+                         imageName.push()
+                    }
+
+                }
+            }
+        }
+        stage('Ansible Pull Image') {
+            steps {
+                  ansiblePlaybook becomeUser: null, colorized: true, disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory', playbook: 'deploy.yml', sudoUser: null
+                }
+            }
+        }
+    }
